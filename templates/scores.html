@@ -1,0 +1,84 @@
+<!-- templates/scores.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">成绩管理</h4>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <form method="POST" action="/score/add" class="row g-3 align-items-end">
+                    <div class="col-auto">
+                        <label class="form-label">学生</label>
+                        <select class="form-select" name="student" required>
+                            <option value="">选择学生</option>
+                            {% for s in students %}
+                            <option value="{{ s.sno }}">{{ s.sname }} ({{ s.sno }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label">课程</label>
+                        <select class="form-select" name="course" required>
+                            <option value="">选择课程</option>
+                            {% for c in courses %}
+                            <option value="{{ c.cno }}">{{ c.cname }} ({{ c.cno }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label">成绩</label>
+                        <input type="number" class="form-control" name="grade" placeholder="成绩" min="0" max="100" required>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">添加</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>学号</th>
+                        <th>姓名</th>
+                        <th>课程号</th>
+                        <th>课程名</th>
+                        <th>成绩</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sc, sname, cname in scs %}
+                    <tr>
+                        <td>{{ sc.sno }}</td>
+                        <td>{{ sname }}</td>
+                        <td>{{ sc.cno }}</td>
+                        <td>{{ cname }}</td>
+                        <td>
+                            <form class="d-inline" method="POST" action="/score/edit">
+                                <input type="hidden" name="sno" value="{{ sc.sno }}">
+                                <input type="hidden" name="cno" value="{{ sc.cno }}">
+                                <div class="input-group input-group-sm" style="width: 120px;">
+                                    <input type="number" class="form-control" name="grade" value="{{ sc.grade }}" min="0" max="100">
+                                    <button class="btn btn-outline-primary" type="submit">保存</button>
+                                </div>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="/score/delete">
+                                <input type="hidden" name="sno" value="{{ sc.sno }}">
+                                <input type="hidden" name="cno" value="{{ sc.cno }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确定删除该记录吗？')">删除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

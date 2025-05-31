@@ -1,0 +1,39 @@
+<!-- templates/student_form.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2>{% if student %}编辑{% else %}添加{% endif %}学生</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">学号</label>
+            <input type="text" class="form-control" name="sno" 
+                   value="{{ student.sno if student }}" {% if student %}readonly{% endif %} required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">姓名</label>
+            <input type="text" class="form-control" name="sname" 
+                   value="{{ student.sname if student }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">性别</label>
+            <select class="form-select" name="ssex" required>
+                <option value="男" {% if student and student.ssex == '男' %}selected{% endif %}>男</option>
+                <option value="女" {% if student and student.ssex == '女' %}selected{% endif %}>女</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">年龄</label>
+            <input type="number" class="form-control" name="sage" 
+                   value="{{ student.sage if student }}" min="15" max="45" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">院系</label>
+            <input type="text" class="form-control" name="sdept" 
+                   value="{{ student.sdept if student }}">
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('students') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

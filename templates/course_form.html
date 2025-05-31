@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2>{% if course %}编辑{% else %}添加{% endif %}课程</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">课程号</label>
+            <input type="text" class="form-control" name="cno" value="{{ course.cno if course }}" {% if course %}readonly{% endif %} required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">课程名</label>
+            <input type="text" class="form-control" name="cname" value="{{ course.cname if course }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">学分</label>
+            <input type="number" class="form-control" name="ccredit" value="{{ course.ccredit if course and course.ccredit is defined }}" min="1" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">先修课</label>
+            <input type="text" class="form-control" name="cpno" value="{{ course.cpno if course and course.cpno is defined }}">
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('courses') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

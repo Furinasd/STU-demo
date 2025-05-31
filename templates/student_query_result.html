@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ student.sname }} ({{ student.sno }}) 的课表</h2>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>课程热力图</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>周一</th>
+                            <th>周二</th>
+                            <th>周三</th>
+                            <th>周四</th>
+                            <th>周五</th>
+                            <th>周六</th>
+                            <th>周日</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in range(12) %}
+                        <tr>
+                            <td>第{{ i+1 }}节</td>
+                            {% for j in range(7) %}
+                            <td class="{% if heatmap_data[j][i] > 0 %}table-danger{% endif %}">
+                                {% if heatmap_data[j][i] > 0 %}
+                                {{ heatmap_data[j][i] }}门课
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>详细课程安排</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>课程名</th>
+                        <th>教师</th>
+                        <th>教室</th>
+                        <th>星期</th>
+                        <th>时间</th>
+                        <th>持续节数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s, cname in schedule %}
+                    <tr>
+                        <td>{{ cname }}</td>
+                        <td>
+                            {% set teaching = Teaching.query.filter_by(cno=s.cno).first() %}
+                            {% if teaching %}
+                                {{ Teacher.query.get(teaching.tno).tname }}
+                            {% else %}
+                                未分配教师
+                            {% endif %}
+                        </td>
+                        <td>{{ s.classroom }}</td>
+                        <td>{{ ['周一','周二','周三','周四','周五','周六','周日'][s.day_of_week-1] }}</td>
+                        <td>第{{ s.time_slot }}节</td>
+                        <td>{{ s.duration }}节</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-3">
+    <a href="{{ url_for('student_query') }}" class="btn btn-primary">返回</a>
+    <a href="{{ url_for('course_selection') }}?sno={{ student.sno }}" 
+       class="btn btn-success ms-2">为该生添加课程</a>
+</div>
+</div>
+{% endblock %}

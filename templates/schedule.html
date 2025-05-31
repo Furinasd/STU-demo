@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>排课管理</h2>
+    <div class="mb-3">
+        <a href="{{ url_for('init_schedule') }}" class="btn btn-warning" onclick="return confirm('确定要随机初始化排课数据吗？')">随机初始化排课</a>
+    </div>
+    
+    <form method="POST" action="{{ url_for('add_schedule') }}" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">课程</label>
+                <select class="form-select" name="course" required>
+                    <option value="">选择课程</option>
+                    {% for course in courses %}
+                    <option value="{{ course.cno }}">{{ course.cname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">教师</label>
+                <select class="form-select" name="teacher" required>
+                    <option value="">选择教师</option>
+                    {% for teacher in teachers %}
+                    <option value="{{ teacher.tno }}">{{ teacher.tname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">教室</label>
+                <select class="form-select" name="classroom" required>
+                    <option value="">选择教室</option>
+                    {% for room in classrooms %}
+                    <option value="{{ room }}">{{ room }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">星期</label>
+                <select class="form-select" name="day_of_week" required>
+                    <option value="1">周一</option>
+                    <option value="2">周二</option>
+                    <option value="3">周三</option>
+                    <option value="4">周四</option>
+                    <option value="5">周五</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">开始节次</label>
+                <select class="form-select" name="time_slot" required>
+                    {% for i in range(1, 11) %}
+                    <option value="{{ i }}">第{{ i }}节</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">持续节数</label>
+                <select class="form-select" name="duration">
+                    <option value="2">2节</option>
+                    <option value="3">3节</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">添加排课</button>
+            </div>
+        </div>
+    </form>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>课程名</th>
+                <th>教师</th>
+                <th>教室</th>
+                <th>时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for schedule, cname, tname in schedules %}
+            <tr>
+                <td>{{ cname }}</td>
+                <td>{{ tname }}</td>
+                <td>{{ schedule.classroom }}</td>
+                <td>
+                    周{{ ['一','二','三','四','五','六','日'][schedule.day_of_week-1] }}
+                    第{{ schedule.time_slot }}-{{ schedule.time_slot + schedule.duration -1 }}节
+                </td>
+                <td>
+                    <a href="{{ url_for('delete_schedule', id=schedule.id) }}" 
+                       class="btn btn-sm btn-danger" 
+                       onclick="return confirm('确定删除吗？')">删除</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2>{{ student.sname }}（{{ student.sno }}）的选课与成绩</h2>
+    <form method="post">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>课程号</th>
+                    <th>课程名</th>
+                    <th>成绩</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in courses %}
+                <tr>
+                    <td>{{ c.cno }}</td>
+                    <td>{{ c.cname }}</td>
+                    <td>
+                        <input type="number" name="grade_{{ c.cno }}" value="{{ c.grade or '' }}" min="0" max="100" class="form-control" style="width:90px;display:inline;">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">保存成绩</button>
+        <a href="{{ url_for('students') }}" class="btn btn-secondary">返回学生列表</a>
+    </form>
+</div>
+{% endblock %}

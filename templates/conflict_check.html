@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>排课冲突检测</h2>
+    <form method="POST" class="mt-4">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">课程</label>
+                <select class="form-select" name="cno" required>
+                    <option value="">选择课程</option>
+                    {% for schedule, cname, tname in schedules %}
+                    <option value="{{ schedule.cno }}" 
+                            data-teacher="{{ schedule.tno }}"
+                            data-classroom="{{ schedule.classroom }}">
+                        {{ cname }} ({{ schedule.classroom }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">教师</label>
+                <select class="form-select" name="tno" required>
+                    <option value="">选择教师</option>
+                    {% for teacher in teachers %}
+                    <option value="{{ teacher.tno }}">{{ teacher.tname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">教室</label>
+                <input type="text" class="form-control" name="classroom" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">星期</label>
+                <select class="form-select" name="day_of_week" required>
+                    <option value="1">周一</option>
+                    <option value="2">周二</option>
+                    <option value="3">周三</option>
+                    <option value="4">周四</option>
+                    <option value="5">周五</option>
+                    <option value="6">周六</option>
+                    <option value="7">周日</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">开始节次</label>
+                <select class="form-select" name="time_slot" required>
+                    {% for i in range(1, 13) %}
+                    <option value="{{ i }}">第{{ i }}节</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">持续节数</label>
+                <select class="form-select" name="duration">
+                    <option value="2">2节</option>
+                    <option value="3">3节</option>
+                    <option value="4">4节</option>
+                </select>
+            </div>
+            <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary">检测冲突</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

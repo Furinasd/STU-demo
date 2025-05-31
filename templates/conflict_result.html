@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>冲突检测结果</h2>
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">检测到的冲突</h5>
+            <ul class="list-group">
+                <li class="list-group-item {% if conflicts.teacher %}list-group-item-danger{% endif %}">
+                    <strong>教师时间冲突:</strong> 
+                    {% if conflicts.teacher %}{{ conflicts.teacher|join(', ') }}{% else %}无冲突{% endif %}
+                </li>
+                <li class="list-group-item {% if conflicts.classroom %}list-group-item-danger{% endif %}">
+                    <strong>教室冲突:</strong> 
+                    {% if conflicts.classroom %}{{ conflicts.classroom|join(', ') }}{% else %}无冲突{% endif %}
+                </li>
+                <li class="list-group-item {% if conflicts.course %}list-group-item-danger{% endif %}">
+                    <strong>课程重复安排:</strong> 
+                    {% if conflicts.course %}{{ conflicts.course|join(', ') }}{% else %}无冲突{% endif %}
+                </li>
+                <li class="list-group-item {% if conflicts.student %}list-group-item-danger{% endif %}">
+                    <strong>学生时间冲突:</strong> 
+                    {% if conflicts.student %}{{ conflicts.student|join(', ') }}{% else %}无冲突{% endif %}
+                </li>
+                <li class="list-group-item {% if conflicts.prerequisite %}list-group-item-danger{% endif %}">
+                    <strong>先修课程缺失:</strong> 
+                    {% if conflicts.prerequisite %}{{ conflicts.prerequisite|join(', ') }}{% else %}无冲突{% endif %}
+                </li>
+            </ul>
+            <div class="mt-3">
+                <a href="{{ url_for('conflict_check') }}" class="btn btn-primary">返回</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

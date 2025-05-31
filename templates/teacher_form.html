@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2>{% if teacher %}编辑{% else %}添加{% endif %}教师</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">工号</label>
+            <input type="text" class="form-control" name="tno" value="{{ teacher.tno if teacher }}" {% if teacher %}readonly{% endif %} required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">姓名</label>
+            <input type="text" class="form-control" name="tname" value="{{ teacher.tname if teacher }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">职称</label>
+            <input type="text" class="form-control" name="title" value="{{ teacher.title if teacher }}">
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{{ url_for('teachers') }}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}
