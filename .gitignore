@@ -1,0 +1,19 @@
+# Python 相关
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# 环境变量（包含敏感信息）
+.env
+
+# IDE/编辑器配置文件
+.vscode/
+.idea/
+
+# 日志和缓存文件
+*.log
+*.sqlite

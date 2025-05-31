@@ -1,9 +1,19 @@
+'''
+Author: fucalors mrsugartea@gmail.com
+Date: 2025-05-31 17:55:52
+LastEditors: fucalors mrsugartea@gmail.com
+LastEditTime: 2025-05-31 22:50:28
+FilePath: \STU\app.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import os
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@localhost/stu'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'mysql+pymysql://root:123456@localhost/stu')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'supersecretkey'
 db = SQLAlchemy(app)
@@ -183,31 +193,36 @@ def student_query():
     if request.method == 'POST':
         sno = request.form['sno']
         student = Student.query.get(sno)
+        
         if not student:
             flash('未找到该学生')
             return redirect(url_for('student_query'))
         
-        schedule = db.session.query(
-            Schedule, Course.cname
-        ).join(
-            SC, Schedule.cno == SC.cno
+        # 预查询所有相关数据
+        schedule_with_courses = db.session.query(
+            Schedule, 
+            Course.cname,
+            Teacher.tname
         ).join(
             Course, Schedule.cno == Course.cno
+        ).join(
+            Teacher, Schedule.tno == Teacher.tno
+        ).join(
+            SC, Schedule.cno == SC.cno
         ).filter(
             SC.sno == sno
         ).all()
         
-        heatmap_data = generate_heatmap_data([s[0] for s in schedule])
+        heatmap_data = generate_heatmap_data([s[0] for s in schedule_with_courses])
         
         return render_template('student_query_result.html', 
-                             student=student, 
-                             schedule=schedule,
-                             heatmap_data=heatmap_data)
+                            student=student, 
+                            schedule=schedule_with_courses,
+                            heatmap_data=heatmap_data)
     
     return render_template('student_query.html')
 
-# 原有路由保持不变（students, scores, courses, teachers, teaching等）
-# ... [保留原有的所有路由] ...
+
 @app.route('/students')
 def students():
     students = Student.query.all()

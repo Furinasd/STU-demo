@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block content %}
@@ -55,25 +56,16 @@
                         <th>教室</th>
                         <th>星期</th>
                         <th>时间</th>
-                        <th>持续节数</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for s, cname in schedule %}
+                    {% for s in schedule %}
                     <tr>
-                        <td>{{ cname }}</td>
-                        <td>
-                            {% set teaching = Teaching.query.filter_by(cno=s.cno).first() %}
-                            {% if teaching %}
-                                {{ Teacher.query.get(teaching.tno).tname }}
-                            {% else %}
-                                未分配教师
-                            {% endif %}
-                        </td>
-                        <td>{{ s.classroom }}</td>
-                        <td>{{ ['周一','周二','周三','周四','周五','周六','周日'][s.day_of_week-1] }}</td>
-                        <td>第{{ s.time_slot }}节</td>
-                        <td>{{ s.duration }}节</td>
+                        <td>{{ s.cname }}</td>
+                        <td>{{ s.tname }}</td>
+                        <td>{{ s.Schedule.classroom }}</td>
+                        <td>{{ ['周一','周二','周三','周四','周五','周六','周日'][s.Schedule.day_of_week-1] }}</td>
+                        <td>第{{ s.Schedule.time_slot }}节</td>
                     </tr>
                     {% endfor %}
                 </tbody>
