@@ -155,6 +155,7 @@ def generate_heatmap_data(schedule):
     
     return heatmap
 
+
 # 路由定义
 @app.route('/')
 def index():
